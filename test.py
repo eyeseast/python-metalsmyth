@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import codecs
+import datetime
 import os
 import shutil
 import unittest
@@ -11,7 +12,8 @@ class StackTest(unittest.TestCase):
     "Base class for tests."
 
     def tearDown(self):
-        shutil.rmtree(self.stack.dest)
+        if os.path.exists(self.stack.dest):
+            shutil.rmtree(self.stack.dest)
 
 
 class NoopTest(StackTest):
@@ -62,6 +64,32 @@ class DraftTest(StackTest):
 
         post = self.stack.files.values()[0]
         self.assertEqual(post['title'], 'Hello, world!')
+
+
+class DateTest(StackTest):
+    """
+    Tests involving the dates plugin
+    """
+    def setUp(self):
+        from metalsmyth.plugins.dates import Dates
+        self.stack = Stack('tests/dates', 'tests/tmp', Dates('date'))
+
+    def test_dates(self):
+        "Dates should get parsed to datetimes"
+        files = self.stack.run()
+
+        for post in files.values():
+            self.assertTrue(isinstance(post['date'], datetime.datetime))
+
+        self.assertEqual(
+            files['hello.markdown']['date'],
+            datetime.datetime(2013, 6, 7)
+        )
+
+        self.assertEqual(
+            files['network-diagrams.markdown']['date'],
+            datetime.datetime(2014, 3, 4)
+        )
 
 
 if __name__ == "__main__":
