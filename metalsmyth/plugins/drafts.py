@@ -4,6 +4,6 @@ This is a simple drafts plugin that filters out any files marked 'draft' in Fron
 
 def drafts(files, metalsmyth):
     "Filter out any files marked 'draft'"
-    for path, post in files.iteritems():
+    for path, post in files.items():
         if post.get('draft'):
             del files[path]

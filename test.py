@@ -7,15 +7,19 @@ import frontmatter
 
 from metalsmyth import Stack
 
-class NoopTest(unittest.TestCase):
+class StackTest(unittest.TestCase):
+    "Base class for tests."
+
+    def tearDown(self):
+        shutil.rmtree(self.stack.dest)
+
+
+class NoopTest(StackTest):
     """
     Tests involving the noop example
     """
     def setUp(self):
         self.stack = Stack('tests/noop', dest='tests/tmp')
-
-    def tearDown(self):
-        shutil.rmtree(self.stack.dest)
 
     def test_build(self):
         "Test that file contents are copied to dest"
@@ -40,6 +44,24 @@ class NoopTest(unittest.TestCase):
                 content = f.read()
 
             self.assertEqual(post.content, content)
+
+
+class DraftTest(StackTest):
+    """
+    Tests involving the drafts plugin
+    """
+    def setUp(self):
+        from metalsmyth.plugins.drafts import drafts
+        self.stack = Stack('tests/drafts', 'tests/tmp', drafts)
+
+    def test_drafts(self):
+        "Draft posts should be filtered out"
+        self.stack.build()
+
+        self.assertEqual(len(self.stack.files), 1)
+
+        post = self.stack.files.values()[0]
+        self.assertEqual(post['title'], 'Hello, world!')
 
 
 if __name__ == "__main__":
