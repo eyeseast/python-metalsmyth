@@ -1,6 +1,7 @@
 """
 Convert content to html with markdown (and possibly other formats)
 """
+import bleach
 import markdown
 
 from . import Plugin
@@ -18,3 +19,33 @@ class Markdown(Plugin):
         for filename, post in files.iteritems():
             # reset first to clear any extension state
             post.content = self.md.reset().convert(post.content)
+
+
+class Bleach(Plugin):
+    """
+    Clean HTML. Options kwargs set in __init__ will be used with bleach.clean
+    """
+    def __init__(self, *args, **kwargs):
+        self.args = list(args)
+        self.kwargs = dict(kwargs)
+
+    def run(self, files, metalsmyth):
+        "Clean your text"
+        for filename, post in files.iteritems():
+            post.content = bleach.clean(post.content, *self.args, **self.kwargs)
+
+
+class Linkify(Plugin):
+    """
+    Run bleach.linkify on post.content
+    """
+    def __init__(self, *args, **kwargs):
+        self.args = list(args)
+        self.kwargs = dict(kwargs)
+    
+    def run(self, files, metalsmyth):
+        "Linkify your text"
+        for filename, post in files.iteritems():
+            post.content = bleach.linkify(post.content, *self.args, **self.kwargs)
+
+

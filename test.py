@@ -113,5 +113,20 @@ class MarkdownTest(StackTest):
             )
 
 
+class BleachTest(StackTest):
+    """
+    Tests for bleach-related plugins
+    """
+    def setUp(self):
+        # add middleware on each test
+        self.stack = Stack('tests/dates', 'tests/tmp')
+
+    def test_clean(self):
+        pass
+
+    def test_linkify(self):
+        pass
+
+
 if __name__ == "__main__":
     unittest.main()
