@@ -1,4 +1,5 @@
-# What do I call this thing?
+# Metalsmyth
+([until I think of a better name](https://github.com/eyeseast/python-metalsmyth/issues/1))
 
 This is a little library to process a directory of files with a stack of middleware. It is based on [metalsmith](http://www.metalsmith.io/), which is built in and for Node. This version uses the same three-step process:
 
