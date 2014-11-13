@@ -5,6 +5,7 @@ import os
 import shutil
 import unittest
 import frontmatter
+from markdown import markdown
 
 from metalsmyth import Stack
 
@@ -90,6 +91,26 @@ class DateTest(StackTest):
             files['network-diagrams.markdown']['date'],
             datetime.datetime(2014, 3, 4)
         )
+
+
+class MarkdownTest(StackTest):
+    """
+    Tests for the markdown plugin
+    """
+    def setUp(self):
+        from metalsmyth.plugins.markup import Markdown
+        self.stack = Stack('tests/dates', 'tests/tmp', Markdown())
+
+    def test_markown(self):
+        "Post.content should be converted to HTML"
+        raw = self.stack.get_files()
+        files = self.stack.run()
+
+        for filename, post in files.iteritems():
+            self.assertEqual(
+                post.content,
+                markdown(raw[filename].content)
+            )
 
 
 if __name__ == "__main__":
