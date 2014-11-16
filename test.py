@@ -4,6 +4,8 @@ import datetime
 import os
 import shutil
 import unittest
+
+import bleach
 import frontmatter
 from markdown import markdown
 
@@ -99,7 +101,7 @@ class MarkdownTest(StackTest):
     """
     def setUp(self):
         from metalsmyth.plugins.markup import Markdown
-        self.stack = Stack('tests/dates', 'tests/tmp', Markdown())
+        self.stack = Stack('tests/markup', 'tests/tmp', Markdown(output_format='html5'))
 
     def test_markown(self):
         "Post.content should be converted to HTML"
@@ -109,7 +111,7 @@ class MarkdownTest(StackTest):
         for filename, post in files.iteritems():
             self.assertEqual(
                 post.content,
-                markdown(raw[filename].content)
+                markdown(raw[filename].content, output_format='html5')
             )
 
 
@@ -119,13 +121,29 @@ class BleachTest(StackTest):
     """
     def setUp(self):
         # add middleware on each test
-        self.stack = Stack('tests/dates', 'tests/tmp')
+        self.stack = Stack('tests/markup', 'tests/tmp')
 
     def test_clean(self):
-        pass
+        from metalsmyth.plugins.markup import Bleach
+        self.stack.middleware.append(Bleach(tags=[], strip=True))
+
+        raw = self.stack.get_files()
+        files = self.stack.run()
+
+        for filename, post in files.iteritems():
+            cleaned = bleach.clean(raw[filename].content, tags=[], strip=True)
+            self.assertEqual(post.content, cleaned)
 
     def test_linkify(self):
-        pass
+        from metalsmyth.plugins.markup import Linkify
+        self.stack.middleware.append(Linkify())
+
+        raw = self.stack.get_files()
+        files = self.stack.run()
+
+        for filename, post in files.iteritems():
+            linked = bleach.linkify(raw[filename].content)
+            self.assertEqual(post.content, linked)
 
 
 if __name__ == "__main__":
