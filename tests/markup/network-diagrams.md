@@ -1,6 +1,6 @@
 ---
 title: "TODO: Understand Network Diagrams"
-layout: post
+template: 'post.html'
 draft: true
 tags: [todo]
 date: "March 4, 2014"

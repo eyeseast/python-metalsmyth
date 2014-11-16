@@ -1,6 +1,6 @@
 ---
 title: "Ebola"
-layout: wide
+template: 'post.html'
 published: true
 comments: false
 tags: [leaflet, mapbox, backbone, underscore]

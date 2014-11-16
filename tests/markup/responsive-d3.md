@@ -1,6 +1,6 @@
 ---
 title: "DavaViz for Everyone: Responsive Maps With D3"
-layout: post
+template: 'post.html'
 published: true
 comments: true
 tags: [d3]

@@ -7,6 +7,7 @@ import unittest
 
 import bleach
 import frontmatter
+from jinja2 import Environment, FileSystemLoader
 from markdown import markdown
 
 from metalsmyth import Stack
@@ -144,6 +145,30 @@ class BleachTest(StackTest):
         for filename, post in files.iteritems():
             linked = bleach.linkify(raw[filename].content)
             self.assertEqual(post.content, linked)
+
+
+class TemplateTest(StackTest):
+    """
+    Tests for the template plugin
+    """
+    maxDiff = None
+
+    def setUp(self):
+        from metalsmyth.plugins.template import Jinja
+
+        self.jinja = Jinja('tests/templates')
+        self.env = Environment(loader=FileSystemLoader('tests/templates'))
+        self.stack = Stack('tests/markup', 'tests/tmp', self.jinja)
+
+    def test_templates(self):
+        "Render posts with a template"
+        raw = self.stack.get_files()
+        files = self.stack.run()
+
+        for filename, post in files.iteritems():
+            template = self.env.get_template(post['template'])
+
+            self.assertEqual(post.content, template.render(post=raw[filename]))
 
 
 if __name__ == "__main__":
