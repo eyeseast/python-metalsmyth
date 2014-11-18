@@ -65,6 +65,25 @@ class Stack(object):
             with open(path, 'w') as f:
                 f.write(post.content.encode('utf-8'))
 
+    def serialize(self, as_dict=False, sort=None):
+        """
+        Dump built files as a list or dictionary, for JSON or other serialization.
 
+            sort: a key function to sort a list, or simply True
+        """
+        files = getattr(self, 'files', self.run())
 
+        if as_dict:
+            return dict((fn, p.to_dict()) for fn, p in files.iteritems())
+
+        # generate a list
+        data = (p.to_dict() for p in files.values())
+
+        if callable(sort):
+            return sorted(data, key=sort)
+
+        elif sort is True:
+            return sorted(data)
+
+        return list(data)
 

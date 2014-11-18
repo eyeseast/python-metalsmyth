@@ -171,5 +171,23 @@ class TemplateTest(StackTest):
             self.assertEqual(post.content, template.render(post=raw[filename]))
 
 
+class SerializationTest(StackTest):
+    """
+    Tests of serialization
+    """
+    def setUp(self):
+        "Use a stack with lots of things"
+        from metalsmyth.plugins.markup import Markdown, Bleach
+
+        self.stack = Stack('tests/markup', 'tests/tmp', Bleach(strip=True), Markdown())
+
+    def test_dict_export(self):
+        files = self.stack.run()
+        data = self.stack.serialize(as_dict=True)
+
+        for filename, post in data.items():
+            self.assertEqual(post, files[filename].to_dict())
+
+
 if __name__ == "__main__":
     unittest.main()
