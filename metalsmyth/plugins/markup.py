@@ -14,7 +14,7 @@ class Markdown(Plugin):
     def __init__(self, **options):
         self.md = markdown.Markdown(**options)
 
-    def run(self, files, metalsmyth):
+    def run(self, files, stack):
         "Convert files"
         for filename, post in files.iteritems():
             # reset first to clear any extension state
@@ -29,7 +29,7 @@ class Bleach(Plugin):
         self.args = list(args)
         self.kwargs = dict(kwargs)
 
-    def run(self, files, metalsmyth):
+    def run(self, files, stack):
         "Clean your text"
         for filename, post in files.iteritems():
             post.content = bleach.clean(post.content, *self.args, **self.kwargs)
@@ -43,7 +43,7 @@ class Linkify(Plugin):
         self.args = list(args)
         self.kwargs = dict(kwargs)
     
-    def run(self, files, metalsmyth):
+    def run(self, files, stack):
         "Linkify your text"
         for filename, post in files.iteritems():
             post.content = bleach.linkify(post.content, *self.args, **self.kwargs)

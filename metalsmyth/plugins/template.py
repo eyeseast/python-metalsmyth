@@ -29,7 +29,7 @@ class Jinja(Plugin):
         if default_template:
             self.default_template = env.get_template(default_template)
 
-    def run(self, files, metalsmyth):
+    def run(self, files, stack):
         "Render templates"
 
         for filename, post in files.iteritems():

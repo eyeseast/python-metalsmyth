@@ -14,7 +14,7 @@ class Dates(Plugin):
     def __init__(self, date_field='date'):
         self.date_field = date_field
     
-    def run(self, files, metalsmyth):
+    def run(self, files, stack):
         "Convert dates"
         for filename, post in files.iteritems():
             if self.date_field in post.metadata:

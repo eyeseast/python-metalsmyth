@@ -8,17 +8,32 @@ class Plugin(object):
         files:
         a dictionary of files, where keys are file paths and values are parsed frontmatter posts.
 
-        metalsmyth:
-        a metalsmyth instance, for operating on metadata
+        stack:
+        a Stack instance, for operating on metadata
 
     This base class provides two methods to make things easier:
         run:
-        override this method to do things
+        Override this method to do things. Takes a dictionary of files
+        and the current Stack instance. You don't actually have to use
+        either of these things.
 
         __call__:
-        a wrapper around `run`, to make an instance callable
+        A wrapper around `run`, to make an instance callable. You shouldn't
+        have to touch this.
+
+        except Exception, e:
+            raise e
+
+        __init__:
+        As a convenience, the default constructor just saves any
+        positional and keyword arguments as `self.args` and `self.kwargs`
+        for later use.
 
     """
+    def __init__(self, *args, **kwargs):
+        "Stash any init args and kwargs for later, for conveniences"
+        self.args = list(args)
+        self.kwargs = dict(kwargs)
 
     def __call__(self, files, metalsmyth):
         return self.run(files, metalsmyth)
