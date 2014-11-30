@@ -188,6 +188,14 @@ class SerializationTest(StackTest):
         for filename, post in data.items():
             self.assertEqual(post, files[filename].to_dict())
 
+    def test_list_export(self):
+        files = self.stack.run()
+        posts = sorted(files.values(), key=lambda p: p['title'])
+        data = self.stack.serialize(sort=lambda p: p['title'])
+
+        for p1, p2 in zip(posts, data):
+            self.assertEqual(p1.to_dict(), p2)
+
 
 if __name__ == "__main__":
     unittest.main()
