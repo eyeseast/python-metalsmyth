@@ -27,15 +27,16 @@ class Stack(object):
         files = {}
         for filename in os.listdir(self.source):
             path = os.path.join(self.source, filename)
-            files[filename] = frontmatter.load(path)
+            files[filename] = frontmatter.load(path, 
+                filename=filename, 
+                slug=os.path.basename(filename))
 
         return files
 
-    def run(self, files=None):
+    def run(self):
         "Run each middleware function on files"
-        # use provided files, or load files from source directory
-        if files is None:
-            files = self.get_files()
+        # load files from source directory
+        files = self.get_files()
 
         # loop through each middleware
         for func in self.middleware:
