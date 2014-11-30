@@ -2,7 +2,6 @@
 Render posts with templates
 """
 import os
-from jinja2 import Environment, FileSystemLoader
 
 from . import Plugin
 
@@ -12,7 +11,9 @@ class Jinja(Plugin):
     Use an existing jinja2 environment or simply pass a template directory.
     """
     def __init__(self, template_dir='templates', default_template=None, loader=None, environment=None):
-        
+        # do imports here so other template engines can work independently
+        from jinja2 import Environment, FileSystemLoader
+
         # check for environment, then loader, then just build it
         if environment is not None:
             self.env = environment
