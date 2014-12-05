@@ -33,8 +33,8 @@ class NoopTest(StackTest):
 
         # same filenames should be present
         self.assertEqual(
-            os.listdir(self.stack.source),
-            os.listdir(self.stack.dest)
+            set(os.listdir(self.stack.source)),
+            set(os.listdir(self.stack.dest))
         )
 
     def test_built_content(self):
@@ -66,7 +66,7 @@ class DraftTest(StackTest):
 
         self.assertEqual(len(self.stack.files), 1)
 
-        post = self.stack.files.values()[0]
+        post = list(self.stack.files.values())[0]
         self.assertEqual(post['title'], 'Hello, world!')
 
 
