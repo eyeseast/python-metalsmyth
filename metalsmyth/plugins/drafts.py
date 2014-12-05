@@ -4,6 +4,6 @@ This is a simple drafts plugin that filters out any files marked 'draft' in Fron
 
 def drafts(files, stack):
     "Filter out any files marked 'draft'"
-    for path, post in files.items():
+    for path, post in list(files.items()):
         if post.get('draft'):
             del files[path]
