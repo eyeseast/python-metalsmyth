@@ -63,7 +63,7 @@ class Stack(object):
 
             # join filename to dest dir
             path = os.path.join(self.dest, filename)
-            with open(path, 'w') as f:
+            with open(path, 'wb') as f:
                 f.write(post.content.encode('utf-8'))
 
     def serialize(self, as_dict=False, sort=None):
