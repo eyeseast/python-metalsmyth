@@ -6,6 +6,8 @@ python:
   - "3.3"
   - "3.4"
 # command to install dependencies
-install: "python setup.py install"
+install: 
+ - "python setup.py install"
+ - "pip install -r dev-requirements.txt"
 # command to run tests
 script: python test.py
