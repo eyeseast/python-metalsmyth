@@ -18,6 +18,16 @@ A few plugins are included by default:
  - bleach: run `bleach.clean` on post content
  - linkify: run `bleach.linkify` on post content
 
+## Install
+
+    $ pip install metalsmyth
+
+By itself, Metalsmyth only needs [Python Frontmatter][fm], which itself relies on [PyYAML][]. If you want to use the bundled plugins, you'll need a few extra libraries:
+
+    $ pip install markdown         # for markdown plugin
+    $ pip install bleach           # for bleach and linkify plugins
+    $ pip install jinja2           # for jinja template plugin
+    $ pip install python-dateutil  # for dates plugin
 
 ## Usage
 
