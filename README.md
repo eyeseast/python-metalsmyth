@@ -1,5 +1,7 @@
 # Metalsmyth
 
+[![Build Status](https://travis-ci.org/eyeseast/python-metalsmyth.svg)](https://travis-ci.org/eyeseast/python-metalsmyth)
+
 This is a little library to process a directory of files with a stack of middleware. It is based on [metalsmith](http://www.metalsmith.io/), which is built in and for Node. This version uses the same three-step process:
 
 1. Read all the files in a source directory.
