@@ -32,8 +32,8 @@ class Plugin(object):
     """
     def __init__(self, *args, **kwargs):
         "Stash any init args and kwargs for later, for conveniences"
-        self.args = list(args)
-        self.kwargs = dict(kwargs)
+        self.args = args
+        self.kwargs = kwargs
 
     def __call__(self, files, metalsmyth):
         return self.run(files, metalsmyth)
