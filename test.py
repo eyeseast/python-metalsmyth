@@ -109,7 +109,7 @@ class MarkdownTest(StackTest):
         raw = self.stack.get_files()
         files = self.stack.run()
 
-        for filename, post in files.iteritems():
+        for filename, post in files.items():
             self.assertEqual(
                 post.content,
                 markdown(raw[filename].content, output_format='html5')
@@ -131,7 +131,7 @@ class BleachTest(StackTest):
         raw = self.stack.get_files()
         files = self.stack.run()
 
-        for filename, post in files.iteritems():
+        for filename, post in files.items():
             cleaned = bleach.clean(raw[filename].content, tags=[], strip=True)
             self.assertEqual(post.content, cleaned)
 
@@ -142,7 +142,7 @@ class BleachTest(StackTest):
         raw = self.stack.get_files()
         files = self.stack.run()
 
-        for filename, post in files.iteritems():
+        for filename, post in files.items():
             linked = bleach.linkify(raw[filename].content)
             self.assertEqual(post.content, linked)
 
@@ -165,7 +165,7 @@ class TemplateTest(StackTest):
         raw = self.stack.get_files()
         files = self.stack.run()
 
-        for filename, post in files.iteritems():
+        for filename, post in files.items():
             template = self.env.get_template(post['template'])
 
             self.assertEqual(post.content, template.render(post=raw[filename]))

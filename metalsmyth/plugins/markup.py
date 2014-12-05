@@ -15,7 +15,7 @@ class Markdown(Plugin):
 
     def run(self, files, stack):
         "Convert files"
-        for filename, post in files.iteritems():
+        for filename, post in files.items():
             # reset first to clear any extension state
             post.content = self.md.reset().convert(post.content)
 
@@ -34,7 +34,7 @@ class Bleach(Plugin):
 
     def run(self, files, stack):
         "Clean your text"
-        for filename, post in files.iteritems():
+        for filename, post in files.items():
             post.content = self.bleach.clean(post.content, *self.args, **self.kwargs)
 
 
@@ -52,7 +52,7 @@ class Linkify(Plugin):
     
     def run(self, files, stack):
         "Linkify your text"
-        for filename, post in files.iteritems():
+        for filename, post in files.items():
             post.content = self.bleach.linkify(post.content, *self.args, **self.kwargs)
 
 

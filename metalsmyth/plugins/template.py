@@ -33,7 +33,7 @@ class Jinja(Plugin):
     def run(self, files, stack):
         "Render templates"
 
-        for filename, post in files.iteritems():
+        for filename, post in files.items():
             # check for a template field
             if "template" in post.metadata:
                 template = self.env.get_template(post['template'])

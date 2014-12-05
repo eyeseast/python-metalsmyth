@@ -59,7 +59,7 @@ class Stack(object):
         files = getattr(self, 'files', self.run())
 
         # write the content of each post to dest, using keys as filenames
-        for filename, post in self.files.iteritems():
+        for filename, post in self.files.items():
 
             # join filename to dest dir
             path = os.path.join(self.dest, filename)
@@ -75,7 +75,7 @@ class Stack(object):
         files = getattr(self, 'files', self.run())
 
         if as_dict:
-            return dict((fn, p.to_dict()) for fn, p in files.iteritems())
+            return dict((fn, p.to_dict()) for fn, p in files.items())
 
         # generate a list
         data = (p.to_dict() for p in files.values())

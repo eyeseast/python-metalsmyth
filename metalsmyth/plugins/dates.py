@@ -16,6 +16,6 @@ class Dates(Plugin):
     
     def run(self, files, stack):
         "Convert dates"
-        for filename, post in files.iteritems():
+        for filename, post in files.items():
             if self.date_field in post.metadata:
                 post[self.date_field] = parse(post[self.date_field])
