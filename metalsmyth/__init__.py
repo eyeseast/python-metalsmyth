@@ -64,10 +64,14 @@ class Stack(object):
             filename=filename,
             slug=os.path.splitext(filename)[0])
 
+        # call middleware
         for func in self.middleware:
             func(files, self)
 
+        # cache the processed post
         self.files.update(files)
+
+        # return just the post
         return files[filename]
 
     def build(self):
