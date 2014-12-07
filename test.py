@@ -15,6 +15,8 @@ from metalsmyth import Stack
 class StackTest(unittest.TestCase):
     "Base class for tests."
 
+    maxDiff = None
+
     def tearDown(self):
         if os.path.exists(self.stack.dest):
             shutil.rmtree(self.stack.dest)
@@ -151,7 +153,6 @@ class TemplateTest(StackTest):
     """
     Tests for the template plugin
     """
-    maxDiff = None
 
     def setUp(self):
         from metalsmyth.plugins.template import Jinja
@@ -178,7 +179,6 @@ class SerializationTest(StackTest):
     def setUp(self):
         "Use a stack with lots of things"
         from metalsmyth.plugins.markup import Markdown, Bleach
-
         self.stack = Stack('tests/markup', 'tests/tmp', Bleach(strip=True), Markdown())
 
     def test_dict_export(self):
@@ -195,6 +195,27 @@ class SerializationTest(StackTest):
 
         for p1, p2 in zip(posts, data):
             self.assertEqual(p1.to_dict(), p2)
+
+
+class SingleTest(StackTest):
+    """
+    Tests for getting single files
+    """
+    def setUp(self):
+        from metalsmyth.plugins.markup import Markdown, Bleach
+        self.stack = Stack('tests/markup', 'tests/tmp', Bleach(strip=True), Markdown())
+
+    def test_get_file(self):
+        "Test getting a single processed file"
+        post = frontmatter.load('tests/markup/ebola.md',
+            filename='ebola.md', slug='ebola')
+        post.content = bleach.clean(post.content, strip=True)
+        post.content = markdown(post.content)
+
+        test = self.stack.get('ebola.md')
+
+        self.assertEqual(post.metadata, test.metadata)
+        self.assertEqual(post.content, test.content)
 
 
 if __name__ == "__main__":

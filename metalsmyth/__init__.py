@@ -18,6 +18,7 @@ class Stack(object):
         self.dest = dest
         self.middleware = list(middleware)
         self.metadata = dict(metadata)
+        self.files = {}
 
     def get_files(self):
         """
@@ -29,7 +30,7 @@ class Stack(object):
             path = os.path.join(self.source, filename)
             files[filename] = frontmatter.load(path, 
                 filename=filename, 
-                slug=os.path.basename(filename))
+                slug=os.path.splitext(filename)[0])
 
         return files
 
@@ -45,8 +46,29 @@ class Stack(object):
             func(files, self)
 
         # store and return the result
-        self.files = files
+        self.files.update(files)
         return files
+
+    def get(self, filename, reset=False):
+        """
+        Get a single processed file. Uses a cached version
+        if `run` has already been called, unless `reset` is True.
+        """
+        if filename in self.files and not reset:
+            return files[filename]
+
+        # load a single file, and process
+        files = {}
+        path = os.path.join(self.source, filename)
+        files[filename] = frontmatter.load(path, 
+            filename=filename,
+            slug=os.path.splitext(filename)[0])
+
+        for func in self.middleware:
+            func(files, self)
+
+        self.files.update(files)
+        return files[filename]
 
     def build(self):
         "Build out results to dest directory (creating if needed)"
@@ -56,7 +78,9 @@ class Stack(object):
             os.makedirs(self.dest)
 
         # make sure we have files
-        files = getattr(self, 'files', self.run())
+        #files = getattr(self, 'files', self.run())
+        if not self.files:
+            self.run()
 
         # write the content of each post to dest, using keys as filenames
         for filename, post in self.files.items():
