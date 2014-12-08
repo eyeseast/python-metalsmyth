@@ -53,7 +53,10 @@ class Stack(object):
         """
         Yield processed files one at a time, in natural order.
         """
-        for filename in os.listdir(self.source):
+        files = os.listdir(self.source)
+        files.sort()
+        
+        for filename in files:
             yield self.get(filename, reset)
 
     def get(self, filename, reset=False):
