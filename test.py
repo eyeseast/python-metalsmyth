@@ -218,5 +218,24 @@ class SingleTest(StackTest):
         self.assertEqual(post.content, test.content)
 
 
+class IterTest(StackTest):
+    """
+    Test iterator method
+    """
+    def setUp(self):
+        from metalsmyth.plugins.markup import Markdown, Bleach
+        self.stack = Stack('tests/markup', 'tests/tmp', Bleach(strip=True), Markdown())
+
+    def test_iterator(self):
+        "Test Stack.iter"
+        posts = self.stack.run()
+        posts = sorted(posts.values(), key=lambda p: p['filename'])
+
+        tests = self.stack.iter(reset=True)
+
+        for test, post in zip(tests, posts):
+            self.assertEqual(test.to_dict(), post.to_dict())
+
+
 if __name__ == "__main__":
     unittest.main()

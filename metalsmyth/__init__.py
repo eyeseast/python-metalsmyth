@@ -49,6 +49,13 @@ class Stack(object):
         self.files.update(files)
         return files
 
+    def iter(self, reset=False):
+        """
+        Yield processed files one at a time, in natural order.
+        """
+        for filename in os.listdir(self.source):
+            yield self.get(filename, reset)
+
     def get(self, filename, reset=False):
         """
         Get a single processed file. Uses a cached version
