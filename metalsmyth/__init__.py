@@ -55,7 +55,7 @@ class Stack(object):
         """
         files = os.listdir(self.source)
         files.sort()
-        
+
         for filename in files:
             yield self.get(filename, reset)
 
@@ -65,7 +65,7 @@ class Stack(object):
         if `run` has already been called, unless `reset` is True.
         """
         if filename in self.files and not reset:
-            return files[filename]
+            return self.files[filename]
 
         # load a single file, and process
         files = {}
