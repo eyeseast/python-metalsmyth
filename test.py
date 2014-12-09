@@ -217,6 +217,26 @@ class SingleTest(StackTest):
         self.assertEqual(post.metadata, test.metadata)
         self.assertEqual(post.content, test.content)
 
+    def test_get_cached_file(self):
+        "Make sure file is cached"
+        raw = frontmatter.load('tests/markup/ebola.md')
+        post1 = self.stack.get('ebola.md')
+
+        # change middleware so output is different
+        self.stack.middleware = []
+
+        # this shouldn't change
+        post2 = self.stack.get('ebola.md')
+
+        # resetting should reprocess
+        post3 = self.stack.get('ebola.md', reset=True)
+
+        # posts 1 and 2 should be the same
+        self.assertEqual(post1.to_dict(), post2.to_dict())
+
+        # post 3 should be a noop, like raw
+        self.assertEqual(post3.content, raw.content)
+
 
 class IterTest(StackTest):
     """
