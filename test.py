@@ -167,9 +167,19 @@ class TemplateTest(StackTest):
         files = self.stack.run()
 
         for filename, post in files.items():
-            template = self.env.get_template(post['template'])
+            if "template" in post.metadata:
+                template = self.env.get_template(post['template'])
 
-            self.assertEqual(post.content, template.render(post=raw[filename]))
+                self.assertEqual(post.content, template.render(post=raw[filename]))
+
+    def test_inner_template(self):
+        "Ensure post content is rendered as its own template"
+        post = frontmatter.load('tests/markup/template.md')
+        post.content = self.env.from_string(post.content).render(post.metadata)
+
+        test = self.stack.get('template.md')
+
+        self.assertEqual(test.content, post.content)
 
 
 class SerializationTest(StackTest):
