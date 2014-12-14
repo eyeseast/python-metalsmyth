@@ -32,8 +32,13 @@ class Jinja(Plugin):
 
     def run(self, files, stack):
         "Render templates"
+        # make stack available to all templates
+        self.env.globals['stack'] = stack
 
         for filename, post in files.items():
+            # render content first
+            post.content = self.env.from_string(post.content).render(post.metadata)
+
             # check for a template field
             if "template" in post.metadata:
                 template = self.env.get_template(post['template'])
