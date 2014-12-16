@@ -13,9 +13,9 @@ class Stack(object):
     """
     A Stack takes a source directory, output directory, optional middleware and metadata
     """
-    def __init__(self, source='src', dest='build', *middleware, **metadata):
+    def __init__(self, source='src', *middleware, **metadata):
         self.source = source
-        self.dest = dest
+        self.dest = metadata.pop('dest', None)
         self.middleware = list(middleware)
         self.metadata = dict(metadata)
         self.files = {}
@@ -84,8 +84,18 @@ class Stack(object):
         # return just the post
         return files[filename]
 
-    def build(self):
+    def build(self, dest=None):
         "Build out results to dest directory (creating if needed)"
+        # dest can be set here or on init
+        if not dest:
+            dest = self.dest
+
+        # raise an error if dest is None
+        if dest is None:
+            raise ValueError('destination directory must not be None')
+
+        # store build dir for later
+        self.dest = dest
 
         # ensure a build dir
         if not os.path.isdir(self.dest):

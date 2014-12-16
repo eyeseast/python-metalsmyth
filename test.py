@@ -18,7 +18,7 @@ class StackTest(unittest.TestCase):
     maxDiff = None
 
     def tearDown(self):
-        if os.path.exists(self.stack.dest):
+        if self.stack.dest is not None and os.path.exists(self.stack.dest):
             shutil.rmtree(self.stack.dest)
 
 
@@ -41,7 +41,7 @@ class NoopTest(StackTest):
 
     def test_built_content(self):
         "Test that content is copied"
-        self.stack.build()
+        self.stack.build('tests/tmp')
 
         # test that content is copied to dest
         for filename in os.listdir(self.stack.dest):
@@ -60,11 +60,11 @@ class DraftTest(StackTest):
     """
     def setUp(self):
         from metalsmyth.plugins.drafts import drafts
-        self.stack = Stack('tests/drafts', 'tests/tmp', drafts)
+        self.stack = Stack('tests/drafts', drafts)
 
     def test_drafts(self):
         "Draft posts should be filtered out"
-        self.stack.build()
+        self.stack.build('tests/tmp')
 
         self.assertEqual(len(self.stack.files), 1)
 
@@ -78,7 +78,7 @@ class DateTest(StackTest):
     """
     def setUp(self):
         from metalsmyth.plugins.dates import Dates
-        self.stack = Stack('tests/dates', 'tests/tmp', Dates('date'))
+        self.stack = Stack('tests/dates', Dates('date'))
 
     def test_dates(self):
         "Dates should get parsed to datetimes"
@@ -104,7 +104,7 @@ class MarkdownTest(StackTest):
     """
     def setUp(self):
         from metalsmyth.plugins.markup import Markdown
-        self.stack = Stack('tests/markup', 'tests/tmp', Markdown(output_format='html5'))
+        self.stack = Stack('tests/markup', Markdown(output_format='html5'))
 
     def test_markown(self):
         "Post.content should be converted to HTML"
@@ -124,7 +124,7 @@ class BleachTest(StackTest):
     """
     def setUp(self):
         # add middleware on each test
-        self.stack = Stack('tests/markup', 'tests/tmp')
+        self.stack = Stack('tests/markup')
 
     def test_clean(self):
         from metalsmyth.plugins.markup import Bleach
@@ -159,7 +159,7 @@ class TemplateTest(StackTest):
 
         self.jinja = Jinja('tests/templates')
         self.env = Environment(loader=FileSystemLoader('tests/templates'))
-        self.stack = Stack('tests/markup', 'tests/tmp', self.jinja)
+        self.stack = Stack('tests/markup', self.jinja)
 
     def test_templates(self):
         "Render posts with a template"
@@ -189,7 +189,7 @@ class SerializationTest(StackTest):
     def setUp(self):
         "Use a stack with lots of things"
         from metalsmyth.plugins.markup import Markdown, Bleach
-        self.stack = Stack('tests/markup', 'tests/tmp', Bleach(strip=True), Markdown())
+        self.stack = Stack('tests/markup', Bleach(strip=True), Markdown())
 
     def test_dict_export(self):
         files = self.stack.run()
@@ -213,7 +213,7 @@ class SingleTest(StackTest):
     """
     def setUp(self):
         from metalsmyth.plugins.markup import Markdown, Bleach
-        self.stack = Stack('tests/markup', 'tests/tmp', Bleach(strip=True), Markdown())
+        self.stack = Stack('tests/markup', Bleach(strip=True), Markdown())
 
     def test_get_file(self):
         "Test getting a single processed file"
@@ -254,7 +254,7 @@ class IterTest(StackTest):
     """
     def setUp(self):
         from metalsmyth.plugins.markup import Markdown, Bleach
-        self.stack = Stack('tests/markup', 'tests/tmp', Bleach(strip=True), Markdown())
+        self.stack = Stack('tests/markup', Bleach(strip=True), Markdown())
 
     def test_iterator(self):
         "Test Stack.iter"

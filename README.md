@@ -29,6 +29,9 @@ By itself, Metalsmyth only needs [Python Frontmatter][fm], which itself relies o
     $ pip install jinja2           # for jinja template plugin
     $ pip install python-dateutil  # for dates plugin
 
+ [fm]: https://github.com/eyeseast/python-frontmatter
+ [PyYAML]: http://pyyaml.org
+
 ## Usage
 
 ```python
@@ -36,8 +39,8 @@ from metalsmyth import Stack
 from metalsmyth.plugins.dates import Dates
 from metalsmyth.plugins.markup import Bleach, Markdown
 
-# create a stack with a source directory, destination and middleware
-stack = Stack('tests/markup', 'tests/tmp',
+# create a stack with a source directory and middleware
+stack = Stack('tests/markup', 
     Dates('date'), 
     Bleach(strip=True), 
     Markdown(output_format='html5')
@@ -46,6 +49,6 @@ stack = Stack('tests/markup', 'tests/tmp',
 # get processed files
 files = stack.run()
 
-# or build to stack.dest
-stack.build()
+# or build to a destination directory
+stack.build('tests/tmp')
 ```
