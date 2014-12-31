@@ -136,3 +136,22 @@ class Stack(object):
 
         return list(data)
 
+    def use(self, func):
+        """
+        Add function (or other callable) to the middleware stack.
+        Takes a single function as an argument and returns it,
+        so this can be used as a decorator.
+
+        func should take two arguments: files and stack
+
+        @stack.use
+        def count_files(files, stack):
+            stack.metadata['count'] = len(files)
+
+        """
+        if not callable(func):
+            raise TypeError('Stack.use requires a callable')
+
+        self.middleware.append(func)
+        return func
+

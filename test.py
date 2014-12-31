@@ -53,6 +53,19 @@ class NoopTest(StackTest):
 
             self.assertEqual(post.content, content)
 
+    def test_simple_middleware(self):
+        "Test adding simple middleware using a decorator"
+        stack = self.stack
+
+        @stack.use
+        def count_files(files, stack):
+            stack.metadata['count'] = len(files)
+
+        files = stack.run()
+
+        self.assertEqual(len(files), stack.metadata['count'])
+        self.assertTrue(count_files in stack.middleware)
+
 
 class DraftTest(StackTest):
     """

@@ -58,3 +58,42 @@ files = stack.run()
 # or build to a destination directory
 stack.build('tests/tmp')
 ```
+
+### Adding middleware
+
+If you know all the middleware functions you'll be using when you create a new stack,
+just list them as positional arguments when you initialize.
+
+```python
+stack = Stack('src', Markdown(), Jinja())
+```
+
+In addition, there's a `stack.use` decorator that will push new funcions onto the end of the stack.
+This is useful for one-off plugins that don't need any configuration. For (a totally contrived) example, 
+a specific project might need to ensure that the `stack` instance always knows how many files it's dealing with.
+
+```python
+# define a function and push it onto the stack
+
+@stack.use
+def count_files(files, stack):
+    stack.metadata['count'] = len(files)
+
+# or use pre-defined middleware callables
+stack.use(Markdown())
+stack.use(Jinja())
+stack.use(some_other_function)
+```
+
+Finally, `Stack.middleware` is just a list, so you can edit it any way you'd edit a list. 
+
+```python
+stack = Stack('src')
+stack.middleware = [
+    Bleach(),
+    Markdown(output_format='html5')
+]
+
+stack.middleware.append(Jinja())
+```
+
