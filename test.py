@@ -292,6 +292,16 @@ class IterTest(StackTest):
         for test, post in zip(tests, posts):
             self.assertEqual(test.to_dict(), post.to_dict())
 
+    def test_iterator_reversed(self):
+        "Stack.iter in reverse order"
+        posts = self.stack.run()
+        posts = sorted(posts.values(), key=lambda p: p['filename'], reverse=True)
+
+        tests = self.stack.iter(reset=True, reverse=True)
+
+        for test, post in zip(tests, posts):
+            self.assertEqual(test.to_dict(), post.to_dict())
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -55,12 +55,12 @@ class Stack(object):
         self.files.update(files)
         return files
 
-    def iter(self, reset=False):
+    def iter(self, reset=False, reverse=False):
         """
         Yield processed files one at a time, in natural order.
         """
         files = os.listdir(self.source)
-        files.sort()
+        files.sort(reverse=reverse)
 
         for filename in files:
             try:
