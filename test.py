@@ -10,7 +10,7 @@ import frontmatter
 from jinja2 import Environment, FileSystemLoader
 from markdown import markdown
 
-from metalsmyth import Stack
+from metalsmyth import Stack, PostNotFound
 
 class StackTest(unittest.TestCase):
     "Base class for tests."
@@ -83,6 +83,19 @@ class DraftTest(StackTest):
 
         post = list(self.stack.files.values())[0]
         self.assertEqual(post['title'], 'Hello, world!')
+
+    def test_drafts_with_iter(self):
+        "Handle stack.iter method with drafts plugin"
+        posts = list(self.stack.iter())
+
+        self.assertEqual(len(posts), 1)
+        self.assertEqual(posts[0]['title'], 'Hello, world!')
+
+    def test_drafts_not_found(self):
+        "Ensure a post that isn't there raises NotFound"
+
+        with self.assertRaises(PostNotFound):
+            self.stack.get('network-diagrams.markdown')
 
 
 class DateTest(StackTest):

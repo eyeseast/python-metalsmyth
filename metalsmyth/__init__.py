@@ -9,6 +9,12 @@ import os
 import frontmatter
 
 
+class PostNotFound(Exception):
+    """
+    Error when a post isn't where you think it is
+    """
+
+
 class Stack(object):
     """
     A Stack takes a source directory, output directory, optional middleware and metadata
@@ -57,7 +63,10 @@ class Stack(object):
         files.sort()
 
         for filename in files:
-            yield self.get(filename, reset)
+            try:
+                yield self.get(filename, reset)
+            except PostNotFound:
+                continue
 
     def get(self, filename, reset=False):
         """
@@ -82,7 +91,10 @@ class Stack(object):
         self.files.update(files)
 
         # return just the post
-        return files[filename]
+        try:
+            return files[filename]
+        except KeyError:
+            raise PostNotFound('{0} not found'.format(filename))
 
     def build(self, dest=None):
         "Build out results to dest directory (creating if needed)"
@@ -102,7 +114,6 @@ class Stack(object):
             os.makedirs(self.dest)
 
         # make sure we have files
-        #files = getattr(self, 'files', self.run())
         if not self.files:
             self.run()
 
