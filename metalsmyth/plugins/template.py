@@ -28,7 +28,7 @@ class Jinja(Plugin):
             self.env = Environment(loader=self.loader)
 
         if default_template:
-            self.default_template = env.get_template(default_template)
+            self.default_template = self.env.get_template(default_template)
 
     def run(self, files, stack):
         "Render templates"
